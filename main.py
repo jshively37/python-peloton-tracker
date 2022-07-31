@@ -37,7 +37,6 @@ def api_request(slug, headers=PELOTON_HEADERS, payload=None, method="GET"):
     except HTTPError as e:
         print(e)
 
-
 if __name__ == "__main__":
     payload = json.dumps({
         "username_or_email": f"{PELOTON_USERNAME}",
