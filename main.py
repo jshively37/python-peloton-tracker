@@ -39,13 +39,19 @@ def api_request(slug, headers=PELOTON_HEADERS, payload=None, method="GET"):
 
 
 if __name__ == "__main__":
+
+    # Creates the authentication payload.
     payload = json.dumps({
         "username_or_email": f"{PELOTON_USERNAME}",
         "password": f"{PELOTON_PASSWORD}"
         })
+
+    # Attempt to authenticate with Peloton
     userid = api_request(
         PELOTON_SLUGS['auth'],
         PELOTON_HEADERS,
         payload=payload,
         method="POST")
-    print(userid['user_id'])
+
+    user_id = userid['user_id']
+    print(user_id)
