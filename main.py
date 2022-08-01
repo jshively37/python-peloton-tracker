@@ -38,20 +38,20 @@ def api_request(slug, headers=PELOTON_HEADERS, payload=None, method="GET"):
         print(e)
 
 
-if __name__ == "__main__":
-
-    # Creates the authentication payload.
+def auth_request():
     payload = json.dumps({
         "username_or_email": f"{PELOTON_USERNAME}",
         "password": f"{PELOTON_PASSWORD}"
         })
+    user_id = api_request(
+                PELOTON_SLUGS['auth'],
+                PELOTON_HEADERS,
+                payload=payload,
+                method="POST")
+    return user_id['user_id']
 
-    # Attempt to authenticate with Peloton
-    userid = api_request(
-        PELOTON_SLUGS['auth'],
-        PELOTON_HEADERS,
-        payload=payload,
-        method="POST")
 
-    user_id = userid['user_id']
+if __name__ == "__main__":
+
+    user_id = auth_request()
     print(user_id)
