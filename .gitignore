@@ -161,6 +161,7 @@ cython_debug/
 
 # Data output direectory used locally for testing
 output/
+.local/
 
 # Mac
 .DS_Store
