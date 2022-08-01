@@ -24,7 +24,7 @@ PELOTON_SLUGS = {
 
 # Headers for interacting with Peloton API
 PELOTON_HEADERS = {
-
+    'Content-Type': 'application/json'
 }
 
 
