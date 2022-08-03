@@ -14,19 +14,7 @@ if __name__ == "__main__":
     client = PelotonClient(
         username=PELOTON_USERNAME, password=PELOTON_PASSWORD, url_path=PELOTON_PATH
     )
-    get_user_id = client.create_session().json()
-
-    # Get all workouts
-    get_all_workouts = client.make_request(
-        f"/api/user/{get_user_id['user_id']}/workouts"
-    ).json()
-
-    # Parse out workout IDs
-    workouts_list = [workout["id"] for workout in get_all_workouts["data"]]
-
-    for workout in workouts_list:
-        get_workout_detail = client.make_request(
-            f"/api/workout/{workout}/performance_graph"
-        ).json()
-        for x in get_workout_detail["summaries"]:
-            print(x)
+    client.create_session()
+    client.get_all_workouts()
+    client.parse_all_workouts()
+    client.get_workout_detail()

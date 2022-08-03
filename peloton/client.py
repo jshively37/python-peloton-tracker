@@ -4,9 +4,16 @@ import typing as t
 from urllib.error import HTTPError
 
 
-ENDPOINTS = {"auth": "/auth/login"}
+ENDPOINTS = {
+    "auth": "/auth/login",
+    "general_user": "/api/user",
+    "general_workout": "/api/workout",
+}
 
 PELOTON_HEADERS = {"Content-Type": "application/json"}
+
+
+FITNESS_DISCIPLINE = {"cycling": "cycling"}
 
 
 class PelotonClient:
@@ -38,7 +45,8 @@ class PelotonClient:
             "Content-Type": "application/json",
         }
         try:
-            return self.session.post(url=url, data=payload)
+            user_id = self.session.post(url=url, data=payload).json()
+            self.user_id = user_id["user_id"]
         except HTTPError as e:
             print(e)
 
@@ -66,3 +74,30 @@ class PelotonClient:
             return self.session.post(url=url, headers=headers, timeout=timeout)
         elif method == "PUT":
             return self.session.put(url=url, headers=headers, timeout=timeout)
+
+    def get_all_workouts(self) -> None:
+        """Return all workouts from the API.
+        """
+        self.all_workouts = self.make_request(
+            f"{ENDPOINTS['general_user']}/{self.user_id}/workouts"
+        ).json()
+
+    def parse_all_workouts(self) -> None:
+        """Create a list of workout IDs based upon activity requested.
+        """
+        self.workout_ids = [
+            workout["id"]
+            for workout in self.all_workouts["data"]
+            if workout["fitness_discipline"] == FITNESS_DISCIPLINE["cycling"]
+        ]
+
+    def get_workout_detail(self) -> None:
+        """Return specific information on all workouts captured in the
+            workout list.
+        """
+        for workout in self.workout_ids:
+            get_workout_details = self.make_request(
+                f"{ENDPOINTS['general_workout']}/{workout}/performance_graph"
+            ).json()
+            for summary in get_workout_details["summaries"]:
+                print(summary)
