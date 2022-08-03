@@ -62,3 +62,7 @@ class PelotonClient:
         url = self.url_path + endpoint
         if method == "GET":
             return self.session.get(url=url, headers=headers, timeout=timeout)
+        elif method == "POST":
+            return self.session.post(url=url, headers=headers, timeout=timeout)
+        elif method == "PUT":
+            return self.session.put(url=url, headers=headers, timeout=timeout)
