@@ -7,6 +7,7 @@ name = "pypi"
 requests = "*"
 python-dotenv = "*"
 flake8 = "*"
+typing = "*"
 
 [dev-packages]
 

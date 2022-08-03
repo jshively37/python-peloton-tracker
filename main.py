@@ -1,57 +1,32 @@
-import json
 import os
-from urllib.error import HTTPError
 
-# Ensure requests is installed
-try:
-    import requests
-except ImportError:
-    print("requests not found")
+from dotenv import load_dotenv
 
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-    PELOTON_PATH = os.environ.get("PELOTON_PATH")
-    PELOTON_USERNAME = os.environ.get("PELOTON_USERNAME")
-    PELOTON_PASSWORD = os.environ.get("PELOTON_PASSWORD")
-except ImportError:
-    print("python-dotenv not found")
+from peloton.client import PelotonClient
 
-# Dictionary of Peloton API Endpoints
-PELOTON_SLUGS = {
-    "auth": "/auth/login"
-}
-
-# Headers for interacting with Peloton API
-PELOTON_HEADERS = {
-    'Content-Type': 'application/json'
-}
-
-
-def api_request(slug, headers=PELOTON_HEADERS, payload=None, method="GET"):
-    url = PELOTON_PATH + slug
-    response = requests.request(method, url, data=payload, headers=headers)
-    try:
-        response.raise_for_status()
-        return response.json()
-    except HTTPError as e:
-        print(e)
-
-
-def auth_request():
-    payload = json.dumps({
-        "username_or_email": f"{PELOTON_USERNAME}",
-        "password": f"{PELOTON_PASSWORD}"
-        })
-    user_id = api_request(
-                PELOTON_SLUGS['auth'],
-                PELOTON_HEADERS,
-                payload=payload,
-                method="POST")
-    return user_id['user_id']
+load_dotenv()
+PELOTON_PATH = os.environ.get("PELOTON_PATH")
+PELOTON_USERNAME = os.environ.get("PELOTON_USERNAME")
+PELOTON_PASSWORD = os.environ.get("PELOTON_PASSWORD")
 
 
 if __name__ == "__main__":
+    client = PelotonClient(
+        username=PELOTON_USERNAME, password=PELOTON_PASSWORD, url_path=PELOTON_PATH
+    )
+    get_user_id = client.create_session().json()
 
-    user_id = auth_request()
-    print(user_id)
+    # Get all workouts
+    get_all_workouts = client.make_request(
+        f"/api/user/{get_user_id['user_id']}/workouts"
+    ).json()
+
+    # Parse out workout IDs
+    workouts_list = [workout["id"] for workout in get_all_workouts["data"]]
+
+    for workout in workouts_list:
+        get_workout_detail = client.make_request(
+            f"/api/workout/{workout}/performance_graph"
+        ).json()
+        for x in get_workout_detail["summaries"]:
+            print(x)
