@@ -62,4 +62,3 @@ class PelotonClient:
         url = self.url_path + endpoint
         if method == "GET":
             return self.session.get(url=url, headers=headers, timeout=timeout)
-        # print(response)
