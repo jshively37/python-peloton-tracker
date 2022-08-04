@@ -17,4 +17,6 @@ if __name__ == "__main__":
     client.create_session()
     client.get_all_workouts()
     client.parse_all_workouts()
-    client.get_workout_detail()
+    # Need to loop through workout detail
+    # workout_detail = client.get_workout_detail()
+    # print(workout_detail)

@@ -82,6 +82,8 @@ class PelotonClient:
             f"{ENDPOINTS['general_user']}/{self.user_id}/workouts"
         ).json()
 
+    # Need to break down further.
+    # All workouts or specific workouts (need to find all the fitness_disciplines)
     def parse_all_workouts(self) -> None:
         """Create a list of workout IDs based upon activity requested.
         """
@@ -91,13 +93,9 @@ class PelotonClient:
             if workout["fitness_discipline"] == FITNESS_DISCIPLINE["cycling"]
         ]
 
-    def get_workout_detail(self) -> None:
-        """Return specific information on all workouts captured in the
-            workout list.
+    def get_workout_detail(self, workout_id: str) -> None:
+        """Return information on a specific workout_id
         """
-        for workout in self.workout_ids:
-            get_workout_details = self.make_request(
-                f"{ENDPOINTS['general_workout']}/{workout}/performance_graph"
-            ).json()
-            for summary in get_workout_details["summaries"]:
-                print(summary)
+        return self.make_request(
+            f"{ENDPOINTS['general_workout']}/{workout_id}/performance_graph"
+        ).json()
