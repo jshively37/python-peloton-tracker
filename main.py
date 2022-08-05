@@ -15,6 +15,5 @@ if __name__ == "__main__":
         username=PELOTON_USERNAME, password=PELOTON_PASSWORD, url_path=PELOTON_PATH
     )
     client.create_session()
-    client.get_all_workouts()
-    client.parse_all_workouts()
-    client.get_workout_detail()
+    all_workouts = client.get_all_workouts()
+    print(all_workouts)

@@ -13,14 +13,11 @@ ENDPOINTS = {
 PELOTON_HEADERS = {"Content-Type": "application/json"}
 
 
-FITNESS_DISCIPLINE = {"cycling": "cycling"}
-
-
 class PelotonClient:
     def __init__(
         self, username: str, password: str, url_path: str = "https://api.onepeloton.com"
     ) -> None:
-        """_summary_
+        """Peloton Client that will handle making API calls to the Peloton API.
 
         Args:
             username (str): Username for Peloton
@@ -47,8 +44,8 @@ class PelotonClient:
         try:
             user_id = self.session.post(url=url, data=payload).json()
             self.user_id = user_id["user_id"]
-        except HTTPError as e:
-            print(e)
+        except HTTPError:
+            return {}
 
     def make_request(
         self,
@@ -57,7 +54,7 @@ class PelotonClient:
         headers: t.Dict = PELOTON_HEADERS,
         timeout: int = 10,
     ) -> t.Dict:
-        """_summary_
+        """Function that handles making API requests.
 
         Args:
             endpoint (str): URI endpoint to access
@@ -68,36 +65,25 @@ class PelotonClient:
             t.dict: URI response in JSON format
         """
         url = self.url_path + endpoint
-        if method == "GET":
-            return self.session.get(url=url, headers=headers, timeout=timeout)
-        elif method == "POST":
-            return self.session.post(url=url, headers=headers, timeout=timeout)
-        elif method == "PUT":
-            return self.session.put(url=url, headers=headers, timeout=timeout)
+        try:
+            return self.session.request(
+                method=method, url=url, headers=headers, timeout=timeout
+            )
+        except HTTPError:
+            return {}
 
-    def get_all_workouts(self) -> None:
+    def get_all_workouts(self) -> t.Dict:
         """Return all workouts from the API.
+
+        Returns:
+            t.Dict: json object containing all the workout information.
         """
-        self.all_workouts = self.make_request(
+        return self.make_request(
             f"{ENDPOINTS['general_user']}/{self.user_id}/workouts"
         ).json()
 
-    def parse_all_workouts(self) -> None:
-        """Create a list of workout IDs based upon activity requested.
-        """
-        self.workout_ids = [
-            workout["id"]
-            for workout in self.all_workouts["data"]
-            if workout["fitness_discipline"] == FITNESS_DISCIPLINE["cycling"]
-        ]
-
-    def get_workout_detail(self) -> None:
-        """Return specific information on all workouts captured in the
-            workout list.
-        """
-        for workout in self.workout_ids:
-            get_workout_details = self.make_request(
-                f"{ENDPOINTS['general_workout']}/{workout}/performance_graph"
-            ).json()
-            for summary in get_workout_details["summaries"]:
-                print(summary)
+    def get_workout_detail(self, workout_id: str) -> None:
+        """Return information on a specific workout_id"""
+        return self.make_request(
+            f"{ENDPOINTS['general_workout']}/{workout_id}/performance_graph"
+        ).json()
