@@ -32,7 +32,6 @@ class PelotonClient:
         """This function will create a Peloton API session using the
         information that was passed to the class object.
         """
-        url = self.url_path + ENDPOINTS["auth"]
         payload = json.dumps(
             {"username_or_email": f"{self.username}", "password": f"{self.password}"}
         )
@@ -42,7 +41,9 @@ class PelotonClient:
             "Content-Type": "application/json",
         }
         try:
-            user_id = self.session.post(url=url, data=payload).json()
+            user_id = self.make_request(
+                endpoint=ENDPOINTS["auth"], method="POST", data=payload
+            )
             self.user_id = user_id["user_id"]
         except HTTPError:
             return {}
@@ -53,6 +54,7 @@ class PelotonClient:
         method: str = "GET",
         headers: t.Dict = PELOTON_HEADERS,
         timeout: int = 10,
+        data: t.Dict = None,
     ) -> t.Dict:
         """Function that handles making API requests.
 
@@ -68,7 +70,7 @@ class PelotonClient:
         url = self.url_path + endpoint
         try:
             return self.session.request(
-                method=method, url=url, headers=headers, timeout=timeout
+                method=method, url=url, headers=headers, timeout=timeout, data=data
             ).json()
         except HTTPError:
             return {}
@@ -99,7 +101,7 @@ class PelotonClient:
         # Return a flatten list
         return [item for sublist in workout_list for item in sublist]
 
-    def get_workout_detail(self, workout_id: str) -> None:
+    def get_workout_detail(self, workout_id: str) -> t.Dict:
         """Return information on a specific workout using the workout_id
 
         Args:
