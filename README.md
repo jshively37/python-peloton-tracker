@@ -23,7 +23,7 @@ If you are using Pipenv a Pipfile has been included. To install the dependencies
 
 Rename `.env.example` to `.env` and populate your variables in this file. The .env is included in the .gitignore to ensure it does not accidently get checked into a git repo.
 
-A main.py file has been included that will return all workouts to validate success.
+A `main.py` file has been included that will return all workouts to validate success. To return all workouts execute `python main.py`.
 
 ## License
 
