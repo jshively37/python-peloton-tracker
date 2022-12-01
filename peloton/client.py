@@ -60,7 +60,8 @@ class PelotonClient:
             endpoint (str): URI endpoint to access
             method (str, optional): URI method. Defaults to "GET".
             headers (t.dict, optional): URI headers. Defaults to PELOTON_HEADERS.
-
+            timeout (int, optional): URI Timeout.
+            limit (int, optional): Number of entries to return.
         Returns:
             t.dict: URI response in JSON format
         """
@@ -72,18 +73,41 @@ class PelotonClient:
         except HTTPError:
             return {}
 
-    def get_all_workouts(self) -> t.Dict:
+    def get_all_workouts(self, page: int = 1, limit: int = 100) -> t.List:
         """Return all workouts from the API.
 
+        Args:
+            page: Page to start at
+            limit: Number of entries to return in each request (current max is 100)
         Returns:
-            t.Dict: json object containing all the workout information.
+            t.List: List of dictionaries containing all workouts
         """
-        return self.make_request(
-            f"{ENDPOINTS['general_user']}/{self.user_id}/workouts"
-        ).json()
+
+        more_pages = True
+        workout_list = []
+
+        while more_pages:
+            response = self.make_request(
+                f"{ENDPOINTS['general_user']}/{self.user_id}/workouts?limit={limit}&page={page}"
+            ).json()
+            workout_list.append(response["data"])
+            if response["show_next"]:
+                page += 1
+            else:
+                more_pages = False
+
+        # Return a flatten list
+        return [item for sublist in workout_list for item in sublist]
 
     def get_workout_detail(self, workout_id: str) -> None:
-        """Return information on a specific workout_id"""
+        """Return information on a specific workout using the workout_id
+
+        Args:
+            workout_id (str): Peloton ID of the specific workout.
+
+        Returns:
+            t.Dict: json object containing workout data.
+        """
         return self.make_request(
             f"{ENDPOINTS['general_workout']}/{workout_id}/performance_graph"
         ).json()
