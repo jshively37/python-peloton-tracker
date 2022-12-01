@@ -29,4 +29,4 @@ A main.py file has been included that will return all workouts to validate succe
 
 MIT
 
-See [license.MD](license.MD) for the full text.
+See [LICENSE.md](LICENSE.md) for the full text.
