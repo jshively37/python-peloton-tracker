@@ -17,3 +17,4 @@ if __name__ == "__main__":
     client.create_session()
     all_workouts = client.get_all_workouts()
     print(all_workouts)
+    print(len(all_workouts))
