@@ -79,8 +79,8 @@ class PelotonClient:
         """Return all workouts from the API.
 
         Args:
-            page: Page to start at (default is 0)
-            limit: Number of entries to return in each request (current max is 100)
+            page (int): Page to start at (default is 0)
+            limit (int): Number of entries to return in each request (current max is 100)
         Returns:
             t.List: List of dictionaries containing all workouts
         """
