@@ -10,7 +10,7 @@ Current state: Return all workouts from the Peloton API as a list of dictionarie
 
 ## Future Plans (issues opened in GitHub)
 
-Return all personal best cycling workouts and specifics about that ride (instructor, name, music, etc.)
+Return all personal best cycling workouts and specifics about that ride (instructor, name, music, etc.). 
 Graph total_effort based on cycling time (ignore anything less than 10 because these are warm up, cool down, or abandoned rides).
 
 ## Requirements
