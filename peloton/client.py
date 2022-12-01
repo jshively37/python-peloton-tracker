@@ -73,34 +73,31 @@ class PelotonClient:
         except HTTPError:
             return {}
 
-    def get_all_workouts(self) -> t.Dict:
+    def get_all_workouts(self, page: int = 1, limit: int = 100) -> t.List:
         """Return all workouts from the API.
 
+        Args:
+            page: Page to start at
+            limit: Number of entries to return in each request (current max is 100)
         Returns:
-            t.Dict: json object containing all the workout information.
+            t.List: List of dictionaries containing all workouts
         """
 
-        # Rough logic
+        more_pages = True
+        workout_list = []
 
-        # Set variables
-        # limit = 100
-        # page = 1
-        # response = {}
-        # modify endpoint to get 100 and first page. This will be tweaked as
-        # we go through
-        # the while loop
+        while more_pages:
+            response = self.make_request(
+                f"{ENDPOINTS['general_user']}/{self.user_id}/workouts?limit={limit}&page={page}"
+            ).json()
+            workout_list.append(response["data"])
+            if response["show_next"]:
+                page += 1
+            else:
+                more_pages = False
 
-        # Logic
-        # Make request and if show_next key exists in payload then go into a while loop.
-        # If show_next does not exist then return results.
-        # while show_next is true:
-        #   make call
-        #   add to dict
-        #   page+1
-        # return dict
-        return self.make_request(
-            f"{ENDPOINTS['general_user']}/{self.user_id}/workouts"
-        ).json()
+        # Return a flatten list
+        return [item for sublist in workout_list for item in sublist]
 
     def get_workout_detail(self, workout_id: str) -> None:
         """Return information on a specific workout using the workout_id
