@@ -34,8 +34,9 @@ if __name__ == "__main__":
     client.create_session()
     all_workouts = client.get_all_workouts()
 
-    pr_dict = {}
+    pr_list = []
     for workout in all_workouts:
         if workout['is_total_work_personal_record']:
             pr_workout = parse_pr_workouts(workout)
-            print(pr_workout)
+            pr_list.append(pr_workout)
+    print(pr_list)
