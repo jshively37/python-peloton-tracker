@@ -24,9 +24,7 @@ def parse_pr_workouts(workout):
         elif summary['display_name'].lower() == "total output":
             output = summary['value']
             pr_dict_values["output"] = output
-    pr_data = {response['duration'] / 60: pr_dict_values}
-    print(pr_data)
-    print('-'*100)
+    return {response['duration'] / 60: pr_dict_values}
 
 
 if __name__ == "__main__":
@@ -39,4 +37,5 @@ if __name__ == "__main__":
     pr_dict = {}
     for workout in all_workouts:
         if workout['is_total_work_personal_record']:
-            parse_pr_workouts(workout)
+            pr_workout = parse_pr_workouts(workout)
+            print(pr_workout)
