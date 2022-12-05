@@ -8,17 +8,20 @@ Project is focused on graphing data returned from the Peloton API.
 
 Current state: Return all workouts from the Peloton API as a list of dictionaries, and the ability to query a specific workout based on the ID. This logic is handled in `peloton/client.py` which acts as a API wrapper.
 
+## Current Status
+
+Return all personal best cycling workouts and specifics about that ride (instructor, name, music, etc.).
+
 ## Future Plans (issues opened in GitHub)
 
 ```
-Return all personal best cycling workouts and specifics about that ride (instructor, name, music, etc.). 
 Graph total_effort based on cycling time (ignore anything less than 10 because these are warm up, cool down, or abandoned rides).
 ```
 
 ## Requirements
 
 ```
-Python 3.10.4
+Python 3.11.0
 Requests 2.28.1
 ```
 
