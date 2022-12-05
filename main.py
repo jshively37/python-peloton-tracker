@@ -12,7 +12,7 @@ PELOTON_USERNAME = os.environ.get("PELOTON_USERNAME")
 PELOTON_PASSWORD = os.environ.get("PELOTON_PASSWORD")
 
 
-def parse_pr_workouts(workout):
+def parse_pr_workout(workout):
     workout_date = datetime.datetime.fromtimestamp(workout["created_at"]).strftime(
         "%Y-%m-%d %H:%M:%S"
     )
@@ -41,6 +41,6 @@ if __name__ == "__main__":
     pr_list = []
     for workout in all_workouts:
         if workout["is_total_work_personal_record"]:
-            pr_workout = parse_pr_workouts(workout)
+            pr_workout = parse_pr_workout(workout)
             pr_list.append(pr_workout)
     print(pr_list)
