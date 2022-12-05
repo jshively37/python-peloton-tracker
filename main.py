@@ -70,9 +70,9 @@ if __name__ == "__main__":
     client.create_session()
     all_workouts = client.get_all_workouts()
 
-    pr_list = []
-    for workout in all_workouts:
-        if workout["is_total_work_personal_record"]:
-            pr_workout = parse_pr_workout(workout)
-            pr_list.append(pr_workout)
+    pr_list = [
+        parse_pr_workout(workout)
+        for workout in all_workouts
+        if workout["is_total_work_personal_record"]
+    ]
     print(pr_list)
