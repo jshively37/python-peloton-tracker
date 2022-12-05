@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from dotenv import load_dotenv
@@ -12,19 +13,22 @@ PELOTON_PASSWORD = os.environ.get("PELOTON_PASSWORD")
 
 
 def parse_pr_workouts(workout):
-    pr_dict_values = {}
-    response = client.get_workout_detail(workout['id'])
-    for summary in response['summaries']:
-        if summary['display_name'].lower() == "distance":
-            miles = summary['value']
+    workout_date = datetime.datetime.fromtimestamp(workout["created_at"]).strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )
+    pr_dict_values = {"workout_time": workout_date}
+    response = client.get_workout_detail(workout["id"])
+    for summary in response["summaries"]:
+        if summary["display_name"].lower() == "distance":
+            miles = summary["value"]
             pr_dict_values["miles"] = miles
-        elif summary['display_name'].lower() == "calories":
-            calories = summary['value']
+        elif summary["display_name"].lower() == "calories":
+            calories = summary["value"]
             pr_dict_values["calories"] = calories
-        elif summary['display_name'].lower() == "total output":
-            output = summary['value']
+        elif summary["display_name"].lower() == "total output":
+            output = summary["value"]
             pr_dict_values["output"] = output
-    return {response['duration'] / 60: pr_dict_values}
+    return {response["duration"] / 60: pr_dict_values}
 
 
 if __name__ == "__main__":
@@ -36,7 +40,7 @@ if __name__ == "__main__":
 
     pr_list = []
     for workout in all_workouts:
-        if workout['is_total_work_personal_record']:
+        if workout["is_total_work_personal_record"]:
             pr_workout = parse_pr_workouts(workout)
             pr_list.append(pr_workout)
     print(pr_list)
