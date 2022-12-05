@@ -13,22 +13,29 @@ PELOTON_PASSWORD = os.environ.get("PELOTON_PASSWORD")
 
 
 def parse_pr_workout(workout):
-    workout_date = datetime.datetime.fromtimestamp(workout["created_at"]).strftime(
-        "%Y-%m-%d %H:%M:%S"
-    )
-    pr_dict_values = {"workout_time": workout_date}
+    pr_dict_values = {"workout_time": format_data_time(workout["created_at"])}
     response = client.get_workout_detail(workout["id"])
     for summary in response["summaries"]:
-        if summary["display_name"].lower() == "distance":
-            miles = summary["value"]
-            pr_dict_values["miles"] = miles
-        elif summary["display_name"].lower() == "calories":
-            calories = summary["value"]
-            pr_dict_values["calories"] = calories
-        elif summary["display_name"].lower() == "total output":
-            output = summary["value"]
-            pr_dict_values["output"] = output
+        pr_dict_values |= parse_summary_dict(summary)
     return {response["duration"] / 60: pr_dict_values}
+
+
+def format_data_time(epoch_time):
+    return datetime.datetime.fromtimestamp(epoch_time).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def parse_summary_dict(summary):
+    pr_dict_values = {}
+    if summary["display_name"].lower() == "distance":
+        miles = summary["value"]
+        pr_dict_values["miles"] = miles
+    elif summary["display_name"].lower() == "calories":
+        calories = summary["value"]
+        pr_dict_values["calories"] = calories
+    elif summary["display_name"].lower() == "total output":
+        output = summary["value"]
+        pr_dict_values["output"] = output
+    return pr_dict_values
 
 
 if __name__ == "__main__":
