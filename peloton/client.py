@@ -115,14 +115,13 @@ class PelotonClient:
             f"{ENDPOINTS['general_workout']}/{workout_id}/performance_graph"
         )
 
-    def get_workout_details(self, workout_id: str) -> t.Dict:
-        """Returns the workout details for a specific workout using the workout_id
+    def get_peloton_ride_details(self, ride_id: str) -> t.Dict:
+        """Returns specific ride information (instructor, music, etc.) using the ride_id.
 
         Args:
-            workout_id (str):
-            workout_id (str):
+            ride_id (str): Peloton ID of the specific ride
 
         Returns:
             t.Dict: json object containing workout data.
         """
-        return self.make_request(f"{ENDPOINTS['ride']}/{workout_id}/details")
+        return self.make_request(f"{ENDPOINTS['ride']}/{ride_id}/details")
