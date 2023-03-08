@@ -8,7 +8,7 @@ ENDPOINTS = {
     "auth": "/auth/login",
     "general_user": "/api/user",
     "general_workout": "/api/workout",
-    "ride": "/api/ride"
+    "ride": "/api/ride",
 }
 
 PELOTON_HEADERS = {"Content-Type": "application/json"}
@@ -125,6 +125,4 @@ class PelotonClient:
         Returns:
             t.Dict: json object containing workout data.
         """
-        return self.make_request(
-            f"{ENDPOINTS['ride']}/{workout_id}/details"
-        )
+        return self.make_request(f"{ENDPOINTS['ride']}/{workout_id}/details")
