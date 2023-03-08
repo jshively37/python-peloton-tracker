@@ -101,7 +101,7 @@ class PelotonClient:
         # Return a flatten list
         return [item for sublist in workout_list for item in sublist]
 
-    def get_workout_detail(self, workout_id: str) -> t.Dict:
+    def get_workout_performance_graph(self, workout_id: str) -> t.Dict:
         """Return information on a specific workout using the workout_id
 
         Args:
