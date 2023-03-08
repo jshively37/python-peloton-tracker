@@ -8,6 +8,7 @@ ENDPOINTS = {
     "auth": "/auth/login",
     "general_user": "/api/user",
     "general_workout": "/api/workout",
+    "ride": "/api/ride"
 }
 
 PELOTON_HEADERS = {"Content-Type": "application/json"}
@@ -112,4 +113,18 @@ class PelotonClient:
         """
         return self.make_request(
             f"{ENDPOINTS['general_workout']}/{workout_id}/performance_graph"
+        )
+
+    def get_workout_details(self, workout_id: str) -> t.Dict:
+        """Returns the workout details for a specific workout using the workout_id
+
+        Args:
+            workout_id (str):
+            workout_id (str):
+
+        Returns:
+            t.Dict: json object containing workout data.
+        """
+        return self.make_request(
+            f"{ENDPOINTS['ride']}/{workout_id}/details"
         )
