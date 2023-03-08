@@ -23,7 +23,7 @@ def parse_pr_workout(workout: t.Dict) -> t.Dict:
         t.Dict: Dictionary object containing the necessary fields.
     """
     pr_dict_values = {"workout_time": format_data_time(workout["created_at"])}
-    response = client.get_workout_detail(workout["id"])
+    response = client.get_workout_performance_graph(workout["id"])
     for summary in response["summaries"]:
         pr_dict_values |= parse_summary_dict(summary)
     return {response["duration"] / 60: pr_dict_values}
